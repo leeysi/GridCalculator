@@ -1,88 +1,117 @@
 package yeseul.kr.hs.emirim.gridcalculator;
 
-import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.Button;
 import android.widget.TextView;
-
 public class MainActivity extends AppCompatActivity {
-    EditText edit_1, edit_2;
+    EditText edit1, edit2;
+    TextView result;
+    Button zero, one, two, three, four, five, six, seven, eight, nine, plus, minus, multiply, division;
     Button[] butNums = new Button[10];
     Button[] butOps = new Button[4];
-    public static final int SELECT_EDIT1=0;
-    public static final int SELECT_EDIT2=1;
-    int SelectEdit = SELECT_EDIT1;
+    public static final int SELECT_EDIT1 = 0;
+    public static final int SELECT_EDIT2 = 1;
+    int selectEdit = SELECT_EDIT1;
+    int num1, num2;
     String numStr = "";
-    // int[] ids = {R.id.but_0..... but_9까지 값을 초기화 해준다. => 미개한 방법} => for문 ids[i]
-    Button but_plus, but_minus, but_multiply, but_division;
-    TextView textResult;
-    String num1, num2;
-    Integer result;
-
+    /* int[] ids = { R.id.zero, R.id.one, R.id.two, R.id.three, R.id.four, R.id.five, R.id.six, R.id.seven, R.id.eight, R.id.nine};*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        edit_1 = (EditText) findViewById(R.id.text1);
-        edit_2 = (EditText) findViewById(R.id.text2);
-        edit_1.setOnTouchListener(edithandler);
-        edit_2.setOnTouchListener(edithandler);
-        Button but_plus = (Button)findViewById(R.id.but_plus);
-        Button but_minus = (Button)findViewById(R.id.but_minus);
-        Button but_multiply = (Button)findViewById(R.id.but_multiply);
-        Button but_division = (Button)findViewById(R.id.but_division);
-        TextView result =  (TextView)findViewById(R.id.result);
+        edit1=(EditText)findViewById(R.id.text1);
+        edit2=(EditText)findViewById(R.id.text2);
+        edit1.setOnTouchListener(EditHandler);
+        edit2.setOnTouchListener(EditHandler);
+        result = (TextView)findViewById(R.id.result);
+        /*text1 = (EditText)findViewById(R.id.text1);
+        text2 = (EditText)findViewById(R.id.text2);
+        zero = (Button)findViewById(R.id.zero);
+        one = (Button)findViewById(R.id.one);
+        two = (Button)findViewById(R.id.two);
+        three = (Button)findViewById(R.id.three);
+        four = (Button)findViewById(R.id.four);
+        five = (Button)findViewById(R.id.five);
+        six = (Button)findViewById(R.id.six);
+        seven = (Button)findViewById(R.id.seven);
+        eight = (Button)findViewById(R.id.eight);
+        nine = (Button)findViewById(R.id.nine);
+        plus = (Button)findViewById(R.id.plus);
+        minus = (Button)findViewById(R.id.minus);
+        multiply = (Button)findViewById(R.id.multiply);
+        division = (Button)findViewById(R.id.division);*/
 
-        for (int i = 0; i < butNums.length; i++) {
-            butNums[i] = (Button) findViewById(R.id.but0 + i);
+        for(int i = 0; i < butNums.length; i++){
+            // butNums[i] = (Button)findViewById(ids[i]);
+            butNums[i] = (Button)findViewById(R.id.but0 + i);
             butNums[i].setOnClickListener(butNumHandler);
         }
-        for (int i = 0; i < butOps.length; i++) {
-            butOps[i] = (Button) findViewById(R.id.but0 + i);
-            butOps[i].setOnClickListener(butNumHandler);
+
+        for(int i = 0; i < butOps.length; i++){
+            // butNums[i] = (Button)findViewById(ids[i]);
+            butOps[i] = (Button)findViewById(R.id.but0 + i);
+            butOps[i].setOnClickListener(butOpHandler);
         }
+
+
     }
+    View.OnClickListener butNumHandler = new View.OnClickListener(){
 
-    View.OnClickListener butNumHandler = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
-            Button but = (Button)v;
-            numStr +=but.getText(); // 버튼이 클릭될 때마다 누적
-
-            switch(SelectEdit){
+        public void onClick(View view) {
+            Button but = (Button)view;
+            numStr+=but.getText();
+            switch(selectEdit)
+            {
                 case SELECT_EDIT1:
-                    edit_1.setText(numStr);
+                    edit1.setText(numStr);
                     break;
                 case SELECT_EDIT2:
-                    edit_2.setText(numStr);
+                    edit2.setText(numStr);
                     break;
             }
         }
     };
 
-    View.OnClickListener butOpsHandler = new View.OnClickListener() {
+    View.OnClickListener butOpHandler = new View.OnClickListener(){
+
         @Override
-        public void onClick(View v) {
-            int num1 = Integer.parseInt(edit_1.getText().toString());
-            int num2 = Integer.parseInt(edit_2.getText().toString());
+        public void onClick(View view) {
+            num1 = Integer.parseInt(edit1.getText().toString());
+            num2 = Integer.parseInt(edit2.getText().toString());
+            int res = 0;
+            switch(view.getId()){
+                case R.id.but1:
+                    res = num1 + num2;
+                    break;
+                case R.id.but2:
+                    res = num1 - num2;
+                    break;
+                case R.id.but3:
+                    res = num1 / num2;
+                    break;
+                case R.id.but4:
+                    res = num1 * num2;
+                    break;
+            }
+            result.setText(""+res);
         }
     };
-
-    View.OnTouchListener edithandler = new View.OnTouchListener() {
+    View.OnTouchListener EditHandler = new View.OnTouchListener() {
         @Override
-        public boolean onTouch(View v, MotionEvent event) {
+        public boolean onTouch(View view, MotionEvent motionEvent) {
             numStr = "";
-
-            switch(v.getId()){
+            switch(view.getId()){
                 case R.id.text1:
-                    SelectEdit = SELECT_EDIT1;
+                    selectEdit = SELECT_EDIT1;
                     break;
                 case R.id.text2:
-                    SelectEdit = SELECT_EDIT2;
+                    selectEdit = SELECT_EDIT2;
                     break;
             }
             return true;
